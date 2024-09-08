@@ -16,7 +16,7 @@ const CancerCareConnect = () => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: '24px',
+      marginBottom: '25px',
     },
     icon: {
       width: '48px',
