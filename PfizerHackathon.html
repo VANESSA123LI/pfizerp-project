@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Wiser with Pfizer - Profiles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #35424a;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        nav {
+            background-color: #2c3e50;
+            color: white;
+            padding: 0.5rem;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        .profile {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        .contact-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        #destinationFilter {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #messageForm {
+            display: flex;
+            flex-direction: column;
+        }
+        #messageForm textarea {
+            margin-bottom: 10px;
+        }
+        #confirmationMessage {
+            display: none;
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ride Wiser with Pfizer</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="profiles.html">Profiles</a>
+    </nav>
+    <div class="container">
+        <h2>Available Profiles</h2>
+        <input type="text" id="destinationFilter" placeholder="Filter by destination...">
+        <div id="profileList">
+            <!-- Profiles will be dynamically added here -->
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalName"></h2>
+            <p id="modalDestination"></p>
+            <p id="modalTime"></p>
+            <p id="modalDescription"></p>
+        </div>
+    </div>
+
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Send a Message</h2>
+            <form id="messageForm">
+                <textarea id="messageText" rows="4" placeholder="Type your message here..." required></textarea>
+                <button type="submit">Send</button>
+            </form>
+            <p id="confirmationMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        const profiles = [
+            { name: "Alice Adams", destination: "New Jersey Hostpial", time: "2024-09-10 14:00", description: "Stage 2 pancreatic cancer patient. Friendly traveler, enjoys conversation about books and movies." },
+            { name: "Bob Smith", destination: "New Jersey Hostpial", time: "2024-09-11 14:30", description: "Stage 1 leukemia patient. Music enthusiast, always has a great playlist for the journey." },
+            { name: "Charlie Brown", destination: "New Jersey Hostpial", time: "2024-09-12 14:15", description: "Tech professional, can share interesting stories about Silicon Valley. Stage 2 colon cancer." },
+            { name: "Diana Liu", destination: "New York Manhattan Hostital", time: "2024-09-10 15:45", description: "Aspiring chef, might bring some homemade snacks for the ride. Stage 4 breast cancer." }
+        ];
+
+        function displayProfiles(profilesToShow) {
+            const profileList = document.getElementById('profileList');
+            profileList.innerHTML = '';
+            profilesToShow.forEach((profile, index) => {
+                const profileDiv = document.createElement('div');
+                profileDiv.className = 'profile';
+                profileDiv.innerHTML = `
+                    <h3>${profile.name}</h3>
+                    <p>Destination: ${profile.destination}</p>
+                    <p>Time: ${profile.time}</p>
+                    <button class="contact-btn" onclick="showMessageModal(event, ${index})">Contact</button>
+                `;
+                profileDiv.onclick = (event) => {
+                    if (!event.target.classList.contains('contact-btn')) {
+                        showProfileModal(index);
+                    }
+                };
+                profileList.appendChild(profileDiv);
+            });
+        }
+
+        function filterProfiles() {
+            const filterValue = document.getElementById('destinationFilter').value.toLowerCase();
+            const filteredProfiles = profiles.filter(profile => 
+                profile.destination.toLowerCase().includes(filterValue)
+            );
+            displayProfiles(filteredProfiles);
+        }
+
+        function showProfileModal(index) {
+            const profile = profiles[index];
+            document.getElementById('modalName').textContent = profile.name;
+            document.getElementById('modalDestination').textContent = `Destination: ${profile.destination}`;
+            document.getElementById('modalTime').textContent = `Time: ${profile.time}`;
+            document.getElementById('modalDescription').textContent = profile.description;
+            document.getElementById('profileModal').style.display = 'block';
+        }
+
+        function showMessageModal(event, index) {
+            event.stopPropagation();
+            const profile = profiles[index];
+            const messageModal = document.getElementById('messageModal');
+            const messageForm = document.getElementById('messageForm');
+            const confirmationMessage = document.getElementById('confirmationMessage');
+            
+            messageForm.onsubmit = (e) => {
+                e.preventDefault();
+                const message = document.getElementById('messageText').value;
+                confirmationMessage.textContent = "Thank you for your message. The person will get back to you shortly.";
+                confirmationMessage.style.display = 'block';
+                messageForm.style.display = 'none';
+                
+                setTimeout(() => {
+                    messageModal.style.display = 'none';
+                    messageForm.reset();
+                    messageForm.style.display = 'flex';
+                    confirmationMessage.style.display = 'none';
+                }, 3000);
+            };
+
+            confirmationMessage.style.display = 'none';
+            messageForm.style.display = 'flex';
+            messageModal.style.display = 'block';
+        }
+
+        // Close modals when clicking on the close button or outside the modal
+        window.onclick = function(event) {
+            const profileModal = document.getElementById('profileModal');
+            const messageModal = document.getElementById('messageModal');
+            if (event.target == profileModal || event.target == messageModal || event.target.className == 'close') {
+                profileModal.style.display = 'none';
+                messageModal.style.display = 'none';
+                document.getElementById('messageForm').reset();
+                document.getElementById('messageForm').style.display = 'flex';
+                document.getElementById('confirmationMessage').style.display = 'none';
+            }
+        }
+
+        document.getElementById('destinationFilter').addEventListener('input', filterProfiles);
+
+        // Initial display of all profiles
+        displayProfiles(profiles);
+    </script>
+</body>
+</html>
