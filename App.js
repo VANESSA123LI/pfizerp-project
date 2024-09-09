@@ -1,12 +1,13 @@
 import React from 'react';
-import CancerCareConnect from './cancerconnect';
+import PfizerRideShareMainCode from './PfizerRideShareMainCode';
 
 function App() {
   return (
     <div className="App">
-      <CancerCareConnect />
+      <PfizerRideShareMainCode />
     </div>
   );
 }
 
 export default App;
+

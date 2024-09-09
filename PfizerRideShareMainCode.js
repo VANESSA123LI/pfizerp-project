@@ -1,6 +1,29 @@
-import React from 'react';
+import React,{ useState }  from 'react';
 import tashaImage from './tasha.png';
+import michaelImage from './personpicture.png';
+import RequestARidePage from './requestaridepage.js';
+import HomePage from './PfizerRideShareMainCode.js'; 
 const CancerCareConnect = () => {
+  const [currentPage, setCurrentPage] = useState('HomePage');
+  const navigateToHome = () => {
+    setCurrentPage('home');
+  };
+  if (currentPage === 'RequestARidePage') {
+    return <RequestARidePage onBackToHome={navigateToHome} />;
+  }
+// const HomePage = () => <div>Home Page</div>;
+// const RequestRidePage = () => <div>Request a Ride Page</div>;
+
+  const renderPage = () => {
+    if (currentPage === 'requestRide') {
+      return <RequestARidePage />;
+    } else if (currentPage === 'home') {
+      return <HomePage />;
+    } else {
+      return <div> Placeholder </div>; // Optionally handle unknown pages
+    }
+  };
+
   const styles = {
     container: {
       minHeight: '100vh',
@@ -17,6 +40,15 @@ const CancerCareConnect = () => {
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: '25px',
+    },
+    headerButton: {
+      padding: '10px',
+      fontSize: '16px',
+      backgroundColor: '#4CAF50',
+      color: 'white',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
     },
     icon: {
       width: '48px',
@@ -122,20 +154,24 @@ const CancerCareConnect = () => {
             </p>
           </div>
           <div style={styles.testimonial}>
-            <img src="/api/placeholder/60/60" alt="Michael" style={styles.profilePic} />
+            <img src={michaelImage} alt="Michael" style={styles.profilePic} />
             <p style={styles.quote}>
               "I struggled to find rides, but thanks to Cancer Care connect, I can feel at ease." - Michael
             </p>
           </div>
         </div>
       </div>
-
       <div style={styles.footer}>
         <h2 style={styles.footerTitle}>I am a</h2>
         <div style={styles.buttonContainer}>
-          <button style={styles.button}>
+          <button style={styles.button} onClick={() => setCurrentPage('requestRide')}>
             Patient
           </button>
+
+
+
+
+          {renderPage()}
           <button style={styles.button}>
             Volunteer Driver
           </button>
